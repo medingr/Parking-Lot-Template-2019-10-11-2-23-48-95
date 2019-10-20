@@ -32,11 +32,21 @@ public class ParkingLotController {
     @PostMapping (produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<ParkingLot> createParkingLot
-            (@RequestBody(required = true) ParkingLot parkingLot)
+            (@RequestBody ParkingLot parkingLot)
     {
        if( parkingLotService.saveParkingLot(parkingLot)) {
            return new ResponseEntity<>(parkingLot , HttpStatus.CREATED);
        }
         return new ResponseEntity<>(parkingLot , HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/{name}" , produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<ParkingLot> deleteParkingLot (@PathVariable String name)
+    {
+        if( parkingLotService.deleteParkingLot(name)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

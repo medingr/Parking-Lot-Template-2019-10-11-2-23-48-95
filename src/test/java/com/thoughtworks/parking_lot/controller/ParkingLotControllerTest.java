@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,5 +73,22 @@ public class ParkingLotControllerTest {
         result.andExpect(status().isCreated())
                 .andReturn();
 
+    }
+
+    @Test
+    void should_delete_parking_lot_when_delete_parking_lot_by_name() throws Exception {
+        //given
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.setName("parkingLotOne");
+
+        when(parkingLotService.deleteParkingLot("parkingLotOne")).thenReturn(true);
+        //when
+        ResultActions result = mvc.perform(delete("/parkingLot/parkingLotOne")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(parkingLot)));
+
+        //then
+        result.andExpect(status().isOk())
+                .andDo(print());
     }
 }

@@ -22,4 +22,12 @@ public class ParkingLotService {
             return true;
         } return false;
     }
+
+    public Boolean deleteParkingLot(String parkingLotName) {
+        ParkingLot parkingLotToDelete = parkingLotRepository.findByname(parkingLotName);
+        if ( parkingLotToDelete != null) {
+            parkingLotRepository.delete(parkingLotToDelete);
+            return true;
+        } return false;
+    }
 }
