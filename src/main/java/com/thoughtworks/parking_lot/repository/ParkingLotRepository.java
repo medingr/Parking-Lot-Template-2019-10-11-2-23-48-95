@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ParkingLotRepository extends JpaRepository<ParkingLot , String> {
-
-
+    public ParkingLot findByname(String parkingLotName) ;
 }
