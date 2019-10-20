@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.parking_lot.model.ParkingLot;
 import com.thoughtworks.parking_lot.service.ParkingLotService;
+import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -111,6 +112,24 @@ public class ParkingLotControllerTest {
         //then
         result.andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    public void should_update_to_20_capacity_when_giving_update_on_capacity() throws Exception {
+        ParkingLot oldParkingLot = new ParkingLot();
+        oldParkingLot.setCapacity(10);
+
+        ParkingLot newParkingLot = new ParkingLot();
+        newParkingLot.setCapacity(20);
+
+        when(parkingLotService.updateParkingLotCapacity(eq("parkingLot1"), any())).thenReturn(newParkingLot);
+
+        ResultActions result = mvc.perform(patch("/parkingLot/{parkingLotName}", "parkingLot1")
+                .content(objectMapper.writeValueAsString(oldParkingLot))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.capacity", Matchers.is(20)));
     }
 
 

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class ParkingLotService {
 
@@ -36,5 +38,14 @@ public class ParkingLotService {
 
     public Iterable<ParkingLot> findAll(PageRequest name) {
         return parkingLotRepository.findAll(name);
+    }
+
+    public ParkingLot updateParkingLotCapacity(String parkingLotName, ParkingLot newParkingLot) {
+        ParkingLot oldParkingLot = parkingLotRepository.findByname(parkingLotName);
+        if(!isNull(oldParkingLot)){
+            oldParkingLot.setCapacity(newParkingLot.getCapacity());
+            return oldParkingLot;
+        }
+        return null;
     }
 }

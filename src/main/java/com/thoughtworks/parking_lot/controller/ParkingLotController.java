@@ -59,4 +59,13 @@ public class ParkingLotController {
         return parkingLotService.findAll(PageRequest.of(page,15, Sort.by("name").ascending()));
     }
 
+    @PatchMapping(path = "/{parkingLotName}", produces = {"application/json"})
+    public ResponseEntity<ParkingLot> updateParkingLotCapacity(@PathVariable String parkingLotName,
+                                                               @RequestBody ParkingLot parkingLotToUpdate) {
+        ParkingLot parkingLotForUpdate = parkingLotService.updateParkingLotCapacity(parkingLotName, parkingLotToUpdate);
+        if (!isNull(parkingLotForUpdate)) {
+            return new ResponseEntity<>(parkingLotForUpdate, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
