@@ -4,6 +4,8 @@ import com.thoughtworks.parking_lot.model.ParkingLot;
 import com.thoughtworks.parking_lot.service.ParkingLotService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,10 @@ public class ParkingLotController {
     @Autowired
     ParkingLotService parkingLotService;
 
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{name}" ,produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<ParkingLot> getParkingLotByParkingName
-            (@RequestParam(required = false, defaultValue = "") String name) {
+            (@PathVariable String name) {
         ParkingLot fetchedParkingLot = parkingLotService.findByName(name);
         if (!isNull(fetchedParkingLot)) {
             return new ResponseEntity<>(fetchedParkingLot, HttpStatus.OK);
@@ -49,4 +51,12 @@ public class ParkingLotController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping(produces = APPLICATION_JSON_VALUE )
+    @ResponseStatus(code = HttpStatus.OK)
+    public Iterable<ParkingLot> getAllparkingLots(
+    @RequestParam(required = false , defaultValue = "0")  Integer page ) {
+        return parkingLotService.findAll(PageRequest.of(page,15, Sort.by("name").ascending()));
+    }
+
 }

@@ -10,11 +10,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.contains;
@@ -91,4 +96,22 @@ public class ParkingLotControllerTest {
         result.andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    void should_return_list_of_parking_lot_by_page() throws Exception {
+        //given
+        ParkingLot parkingLot = new ParkingLot();
+        when(parkingLotService.findAll(new PageRequest(0,5))).
+                thenReturn(Collections.singleton(parkingLot));
+
+        //when
+        ResultActions result = mvc.perform(get("/parkingLot")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(parkingLot)));
+        //then
+        result.andExpect(status().isOk())
+                .andDo(print());
+    }
+
+
 }

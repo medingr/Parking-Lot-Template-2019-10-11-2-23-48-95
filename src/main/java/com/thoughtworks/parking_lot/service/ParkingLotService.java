@@ -3,7 +3,10 @@ package com.thoughtworks.parking_lot.service;
 import com.thoughtworks.parking_lot.model.ParkingLot;
 import com.thoughtworks.parking_lot.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ParkingLotService {
@@ -29,5 +32,9 @@ public class ParkingLotService {
             parkingLotRepository.delete(parkingLotToDelete);
             return true;
         } return false;
+    }
+
+    public Iterable<ParkingLot> findAll(PageRequest name) {
+        return parkingLotRepository.findAll(name);
     }
 }
